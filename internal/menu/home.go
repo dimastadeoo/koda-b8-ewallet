@@ -11,11 +11,20 @@ import (
 
 type HomeMenu struct {
 	authService *service.AuthService
+	userService *service.UserService
+	trasferService *service.TransferService
+
 }
 
-func NewHomeMenu(authService *service.AuthService) *HomeMenu {
+func NewHomeMenu(
+	authService service.AuthService,
+	userService service.UserService,
+	trasferService service.TransferService,
+	) *HomeMenu {
 	return &HomeMenu{
-		authService: authService,
+		authService: &authService,
+		userService: &userService,
+		trasferService: &trasferService,
 	}
 }
 
@@ -127,6 +136,8 @@ func (h *HomeMenu) login() {
 	h.dashboard(user)
 }
 
-func (h *HomeMenu) dashboard(user *models.User) {
-	Dashboard(user)
+func (h *HomeMenu) dashboard(user *models.LoginSession) {
+	h.Dashboard(user)
 }
+
+
