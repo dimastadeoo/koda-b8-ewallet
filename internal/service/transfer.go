@@ -30,7 +30,8 @@ func (s *TransferService) Transfer(
 
 	tx, err := s.conn.Begin(ctx)
 	if err != nil {
-		return err
+		return fmt.Errorf("conn: %w", err)
+
 	}
 
 	defer tx.Rollback(ctx)
@@ -53,20 +54,22 @@ func (s *TransferService) Transfer(
 	if receiverUser.ID == login.User.ID {
 		return errors.New("tidak dapat transfer ke akun sendiri")
 	}
-
+	
 	// ============================
 	// Ambil Wallet
 	// ============================
 
 	senderWallet, err := walletRepo.FindByIDForUpdate(login.Wallet.ID)
 	if err != nil {
-		return err
+		return fmt.Errorf("FindMyWallet: %w", err)
+
 	}
 
-	receiverWallet, err := walletRepo.FindByIDForUpdate(receiverUser.ID)
+	receiverWallet, err := walletRepo.FindByUserID(receiverUser.ID)
 	if err != nil {
-		return err
+		return fmt.Errorf("FindReceiveWallet: %w", err)
 	}
+
 
 	// ============================
 	// Validasi
@@ -101,7 +104,8 @@ func (s *TransferService) Transfer(
 	)
 
 	if err != nil {
-		return err
+		return fmt.Errorf("UpdateMyBalance: %w", err)
+
 	}
 
 	err = walletRepo.UpdateBalance(
@@ -110,7 +114,7 @@ func (s *TransferService) Transfer(
 	)
 
 	if err != nil {
-		return err
+		return fmt.Errorf("UpdateReceiveBalance: %w", err)
 	}
 
 	// ============================
@@ -126,7 +130,7 @@ func (s *TransferService) Transfer(
 	})
 
 	if err != nil {
-		return err
+		return fmt.Errorf("CreateMyTransac: %w", err)
 	}
 
 	// ============================
@@ -142,7 +146,8 @@ func (s *TransferService) Transfer(
 	})
 
 	if err != nil {
-		return err
+		return fmt.Errorf("CreateReceiveTransac: %w", err)
+
 	}
 
 	// ============================
@@ -157,7 +162,8 @@ func (s *TransferService) Transfer(
 	})
 
 	if err != nil {
-		return err
+		return fmt.Errorf("CreateTransfer: %w", err)
+
 	}
 
 	// ============================
@@ -175,7 +181,8 @@ func (s *TransferService) Transfer(
 	})
 
 	if err != nil {
-		return err
+		return fmt.Errorf("CreateMyWalletLog: %w", err)
+
 	}
 
 	// ============================
@@ -193,16 +200,17 @@ func (s *TransferService) Transfer(
 	})
 
 	if err != nil {
-		return err
+		return fmt.Errorf("CreateReceiveWalletLog: %w", err)
+
 	}
 
-	// ============================
+	// ==========================		return err==
 	// Commit
 	// ============================
 
 	err = tx.Commit(ctx)
 	if err != nil {
-		return err
+		return fmt.Errorf("Commit: %w", err)
 	}
 
 	// Update Session
