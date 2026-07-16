@@ -170,7 +170,7 @@ func (r *WalletRepository) FindByIDForUpdate(id int64) (*Wallet, error) {
 			id_user,
 			balance,
 			currency,
-			status,
+			status_account,
 			created_at,
 			updated_at
 		FROM wallets
