@@ -1,1 +1,1 @@
-DROP TABLE "forgot_pin"
+DROP TABLE "forgot_pin";

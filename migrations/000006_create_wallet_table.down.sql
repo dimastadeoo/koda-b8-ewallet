@@ -1,1 +1,1 @@
-DROP TABLE "wallets"
+DROP TABLE "wallets";

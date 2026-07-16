@@ -7,4 +7,4 @@ CREATE TABLE "wallets" {
         CHECK ("status_account" IN ('active','suspended','blocked')),
     "created_at" TIMESTAMP NOT NULL DEFAULT NOW(),
     "updated_at" TIMESTAMP NOT NULL DEFAULT NOW()
-}
+};
