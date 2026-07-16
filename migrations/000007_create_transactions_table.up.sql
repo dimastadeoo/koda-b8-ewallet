@@ -3,7 +3,7 @@ CREATE TABLE "transactions" (
     "id_wallet" BIGINT REFERENCES "wallets"("id") NOT NULL,
     "transaction_type" VARCHAR(30) NOT NULL,
     -- TOPUP
-    -- TRANSFER
+    -- TRANSFER IN / OUT
     -- PAYMENT
     -- WITHDRAW
     "amount" NUMERIC(20,2) NOT NULL,
