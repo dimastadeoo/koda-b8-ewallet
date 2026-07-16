@@ -2,6 +2,15 @@
 
 ## Berikut merupakan ERD dan cara run aplikasi Ewallet
 
+### Akses Aplikasi
+Untuk menjalankan aplikasi bisa pull dari package dan coba jalankan dengan -it supaya aplikasi berjalan di terminal
+
+```sh
+docker pull ghcr.io/dimastadeoo/koda-b8-ewallet:latest
+docker run -it ghcr.io/dimastadeoo/koda-b8-ewallet:latest
+```
+
+
 ```mermaid
 erDiagram
     users {
@@ -106,3 +115,42 @@ erDiagram
     wallets ||--o{ transfers : sender
     wallets ||--o{ transfers : receiver
 ```
+
+### Screenshot
+
+<table>
+    <tr>
+        <td>Tampilan Awal Login / Register</td>
+        <td>Register Users</td>
+        <td>Dashboard Aplikasi Setelah login</td>
+    </tr>
+    <tr>
+        <td><img src="img/Screenshot_2026-07-16_20-19-35.png" alt="Tampilan Awal Ewallet"></td>
+        <td><img src="img/Screenshot_2026-07-16_20-21-21.png" alt="Register"></td>
+        <td><img src="img/Screenshot_2026-07-16_20-21-37.png" alt="Dashboard"></td>
+    </tr>
+</table>
+
+<table>
+    <tr>
+        <td>List User</td>
+        <td>Topup Saldo</td>
+        <td>Tampilkan Saldo</td>
+    </tr>
+    <tr>
+        <td><img src="img/Screenshot_2026-07-16_20-22-27.png" alt="List Users"></td>
+        <td><img src="img/Screenshot_2026-07-16_20-23-05.png" alt="Topup saldo"></td>
+        <td><img src="img/Screenshot_2026-07-16_20-25-06.png" alt="Tampilan Saldo"/></td>
+    </tr>
+</table>
+
+<table>
+    <tr>
+        <td>Process Transfer</td>
+        <td>Topup Saldo</td>
+    </tr>
+    <tr>
+        <td><img src="img/Screenshot_2026-07-16_20-25-25.png" alt="Transfer"></td>
+        <td><img src="img/Screenshot_2026-07-16_20-25-39.png" alt="History"></td>
+    </tr>
+</table>
