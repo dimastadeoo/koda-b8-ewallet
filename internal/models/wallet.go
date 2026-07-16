@@ -1,8 +1,9 @@
 package models
 
 import (
-	"time"
 	"context"
+	"time"
+
 	"github.com/jackc/pgx/v5"
 )
 
@@ -61,7 +62,7 @@ func (r *WalletRepository) FindByUserID(userID int64) (*Wallet, error) {
 			id_user,
 			balance,
 			currency,
-			status,
+			status_account,
 			created_at,
 			updated_at
 		FROM wallets
@@ -97,7 +98,7 @@ func (r *WalletRepository) FindByID(id int64) (*Wallet, error) {
 			id_user,
 			balance,
 			currency,
-			status,
+			status_account,
 			created_at,
 			updated_at
 		FROM wallets
@@ -121,7 +122,7 @@ func (r *WalletRepository) FindByID(id int64) (*Wallet, error) {
 	return &wallet, nil
 }
 
-func (r *WalletRepository) UpdateBalance(walletID int64, balance float64,) error {
+func (r *WalletRepository) UpdateBalance(walletID int64, balance float64) error {
 
 	_, err := r.tx.Exec(
 		context.Background(),
@@ -139,14 +140,14 @@ func (r *WalletRepository) UpdateBalance(walletID int64, balance float64,) error
 	return err
 }
 
-func (r *WalletRepository) UpdateStatus(walletID int64, status string,) error {
+func (r *WalletRepository) UpdateStatus(walletID int64, status string) error {
 
 	_, err := r.tx.Exec(
 		context.Background(),
 		`
 		UPDATE wallets
 		SET
-			status = $1,
+			status_account = $1,
 			updated_at = NOW()
 		WHERE id = $2
 		`,
