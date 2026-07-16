@@ -14,8 +14,10 @@ func main() {
 	defer conn.Close(context.Background())
 
 	authService := service.NewAuthService(conn)
+	userService := service.NewUserService(conn)
+	transferService := service.NewTransferService(conn)
 
-	home := menu.NewHomeMenu(authService)
+	home := menu.NewHomeMenu(*authService, *userService, *transferService)
 
 	home.Home()
 }
