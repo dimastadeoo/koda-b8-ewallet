@@ -16,8 +16,9 @@ func main() {
 	authService := service.NewAuthService(conn)
 	userService := service.NewUserService(conn)
 	transferService := service.NewTransferService(conn)
+	walletService := service.NewWalletService(conn)
 
-	home := menu.NewHomeMenu(*authService, *userService, *transferService)
+	home := menu.NewHomeMenu(*authService, *userService, *transferService, *walletService)
 
 	home.Home()
 }
