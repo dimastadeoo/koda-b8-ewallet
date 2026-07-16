@@ -1,5 +1,5 @@
 CREATE TABLE "users_logs"(
-    "id" BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    "id_user" BIGINT REFERENCES "users"("id") NOT NULL,
     "id_sesion" BIGINT REFERENCES "sessions"("id") NOT NULL, 
     "activity_detail" TEXT NOT NULL,
     "ip_address" VARCHAR(80),
