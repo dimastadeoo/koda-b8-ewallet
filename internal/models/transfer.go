@@ -113,9 +113,11 @@ func (r *TransferRepository) History(
 		var h TransferHistory
 
 		err := rows.Scan(
+			&h.ID,
 			&h.Name,
 			&h.Phone,
 			&h.Amount,
+			&h.Status,
 			&h.Notes,
 			&h.CreatedAt,
 		)
