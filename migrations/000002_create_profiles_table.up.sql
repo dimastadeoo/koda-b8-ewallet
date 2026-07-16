@@ -1,6 +1,6 @@
 CREATE TABLE "profiles" (
     "id" BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    "id_user" BIGINT REFERENCES "users"("id") NULL,
+    "id_user" BIGINT UNIQUE REFERENCES "users"("id") NOT NULL,
     "nik" VARCHAR(16) UNIQUE,
     "name" VARCHAR(150) NOT NULL,
     "address" TEXT,
