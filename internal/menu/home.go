@@ -13,6 +13,7 @@ type HomeMenu struct {
 	authService *service.AuthService
 	userService *service.UserService
 	trasferService *service.TransferService
+	walletService *service.WalletService
 
 }
 
@@ -20,11 +21,14 @@ func NewHomeMenu(
 	authService service.AuthService,
 	userService service.UserService,
 	trasferService service.TransferService,
+	walletService service.WalletService,
+
 	) *HomeMenu {
 	return &HomeMenu{
 		authService: &authService,
 		userService: &userService,
 		trasferService: &trasferService,
+		walletService: &walletService,
 	}
 }
 

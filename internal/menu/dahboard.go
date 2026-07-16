@@ -104,6 +104,39 @@ func (h *HomeMenu) transfer(
 	utils.PressEnter("Enter...")
 }
 
+func (h *HomeMenu) topUp(
+	session *models.LoginSession,
+) {
+
+	utils.CallClear()
+
+	fmt.Println("========== TOP UP ==========")
+
+	input := utils.Input("Nominal : ")
+
+	amount, err := strconv.ParseFloat(input, 64)
+
+	if err != nil {
+		fmt.Println("Nominal tidak valid")
+		utils.PressEnter("Enter...")
+		return
+	}
+
+	err = h.walletService.TopUp(
+		session,
+		amount,
+	)
+
+	if err != nil {
+		fmt.Println(err)
+	} else {
+		fmt.Println("Top Up berhasil")
+		fmt.Printf("Saldo sekarang : %.2f\n", session.Wallet.Balance)
+	}
+
+	utils.PressEnter("Enter...")
+}
+
 
 func (h *HomeMenu) Dashboard(session *models.LoginSession) {
 
@@ -120,7 +153,8 @@ func (h *HomeMenu) Dashboard(session *models.LoginSession) {
 		fmt.Println("2. List User")
 		fmt.Println("3. Transfer")
 		fmt.Println("4. History")
-		fmt.Println("5. Logout")
+		fmt.Println("5. TopUp")
+		fmt.Println("0. Keluar")
 
 		menu := utils.Input("Choose : ")
 
@@ -139,7 +173,12 @@ func (h *HomeMenu) Dashboard(session *models.LoginSession) {
 		case "4":
 			h.historyTransfer(session.Wallet.ID)
 		case "5":
+			h.topUp(session)
+		case "0":
 			return
+		default:
+			fmt.Println("pilihan tidak ada")
+			utils.PressEnter("Tekan Enter untuk coba lagi")
 		}
 
 	}
