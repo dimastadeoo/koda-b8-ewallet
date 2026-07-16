@@ -39,6 +39,8 @@ func (s *AuthService) Register(
 	userRepo := models.NewUserRepository(tx)
 	profileRepo := models.NewProfileRepository(tx)
 	walletRepo := models.NewWalletRepository(tx)
+	sessionRepo := models.NewSessionRepository(tx)
+	userLogRepo := models.NewUserLogRepository(tx)
 
 	// Hash PIN
 	hashPin, err := bcrypt.GenerateFromPassword(
@@ -57,6 +59,18 @@ func (s *AuthService) Register(
 		Pin:      string(hashPin),
 	})
 
+	if err != nil {
+		return err
+	}
+
+	// add session
+	session, err := sessionRepo.Create("register")
+	err = userLogRepo.Create(
+		userID,
+		session.ID,
+		"Register akun",
+		"127.0.0.1",
+	)
 	if err != nil {
 		return err
 	}
@@ -85,7 +99,7 @@ func (s *AuthService) Register(
 func (s *AuthService) Login(
 	hp string,
 	pin string,
-) (*models.User, error) {
+) (*models.LoginSession, error) {
 
 	ctx := context.Background()
 
@@ -97,17 +111,18 @@ func (s *AuthService) Login(
 	defer tx.Rollback(ctx)
 
 	userRepo := models.NewUserRepository(tx)
+	profileRepo := models.NewProfileRepository(tx)
+	walletRepo := models.NewWalletRepository(tx)
+	sessionRepo := models.NewSessionRepository(tx)
+	userLogRepo := models.NewUserLogRepository(tx)
 
+	// Cari user
 	user, err := userRepo.FindByPhone(hp)
-
 	if err != nil {
 		return nil, errors.New("user tidak ditemukan")
 	}
 
-	if user.StatusAccount != "active" {
-		return nil, errors.New("akun tidak aktif")
-	}
-
+	// Validasi PIN
 	err = bcrypt.CompareHashAndPassword(
 		[]byte(user.Pin),
 		[]byte(pin),
@@ -117,5 +132,45 @@ func (s *AuthService) Login(
 		return nil, errors.New("PIN salah")
 	}
 
-	return user, nil
+	// Ambil Profile
+	profile, err := profileRepo.FindByUserID(user.ID)
+	if err != nil {
+		return nil, err
+	}
+
+	// Ambil Wallet
+	wallet, err := walletRepo.FindByUserID(user.ID)
+	if err != nil {
+		return nil, err
+	}
+
+	// Simpan Session ke database
+	session, err := sessionRepo.Create("login")
+	if err != nil {
+		return nil, err
+	}
+
+	// Simpan User Log
+	err = userLogRepo.Create(
+		user.ID,
+		session.ID,
+		"Login berhasil",
+		"127.0.0.1",
+	)
+
+	if err != nil {
+		return nil, err
+	}
+
+	err = tx.Commit(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	return &models.LoginSession{
+		Session: *session,
+		User:    *user,
+		Profile: *profile,
+		Wallet:  *wallet,
+	}, nil
 }
