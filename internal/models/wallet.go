@@ -36,7 +36,7 @@ func (r *WalletRepository) Create(userID int64) error {
 			id_user,
 			balance,
 			currency,
-			status
+			status_account
 		)
 		VALUES
 		(
