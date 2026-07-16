@@ -20,7 +20,6 @@ type Profile struct {
 	UpdatedAt  time.Time
 }
 
-
 type ProfileRepository struct {
 	tx pgx.Tx
 }
@@ -149,4 +148,3 @@ func (r *ProfileRepository) Delete(userID int64) error {
 
 	return err
 }
-

@@ -6,7 +6,6 @@ import (
 	"github.com/dimastadeoo/koda-b8-ewallet/internal/lib"
 	"github.com/dimastadeoo/koda-b8-ewallet/internal/menu"
 	"github.com/dimastadeoo/koda-b8-ewallet/internal/service"
-	
 )
 
 func main() {

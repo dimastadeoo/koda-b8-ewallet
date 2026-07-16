@@ -121,7 +121,7 @@ func (r *UserRepository) FindByEmail(email string) (*User, error) {
 
 }
 
-func (r *UserRepository) FindByID(id int64,) (*User, error) {
+func (r *UserRepository) FindByID(id int64) (*User, error) {
 	var user User
 
 	err := r.tx.QueryRow(
@@ -152,7 +152,7 @@ func (r *UserRepository) FindByID(id int64,) (*User, error) {
 	return &user, nil
 }
 
-func (r *UserRepository) UpdatePin(id int64,newPin string,) error {
+func (r *UserRepository) UpdatePin(id int64, newPin string) error {
 
 	_, err := r.tx.Exec(
 		context.Background(),
@@ -171,7 +171,7 @@ func (r *UserRepository) UpdatePin(id int64,newPin string,) error {
 
 }
 
-func (r *UserRepository) UpdateStatus(id int64, status string,) error {
+func (r *UserRepository) UpdateStatus(id int64, status string) error {
 	_, err := r.tx.Exec(
 		context.Background(),
 		`
@@ -188,4 +188,3 @@ func (r *UserRepository) UpdateStatus(id int64, status string,) error {
 	return err
 
 }
-
