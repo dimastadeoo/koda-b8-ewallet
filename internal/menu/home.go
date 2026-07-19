@@ -43,6 +43,7 @@ func (h *HomeMenu) Home() {
 		fmt.Println("============================")
 		fmt.Println("1. Login")
 		fmt.Println("2. Register")
+		fmt.Println("3. Forgot_Pin")
 		fmt.Println("0. Exit")
 		fmt.Println("============================")
 
@@ -55,6 +56,9 @@ func (h *HomeMenu) Home() {
 
 		case "2":
 			h.register()
+
+		case "3":
+			h.forgotPin()
 
 		case "0":
 			fmt.Println("Terima kasih telah menggunakan E-Wallet")
@@ -138,6 +142,63 @@ func (h *HomeMenu) login() {
 	}
 
 	h.dashboard(user)
+}
+
+func (h *HomeMenu) forgotPin() {
+
+	utils.CallClear()
+
+	fmt.Println("======= FORGOT PIN =======")
+
+	email := strings.TrimSpace(
+		utils.Input("Email          : "),
+	)
+
+	hp := strings.TrimSpace(
+		utils.Input("No HP          : "),
+	)
+
+	// dateBirth := strings.TrimSpace(
+	// 	utils.Input("Input Tgl Lahir       : "),
+	// )
+
+	pin := strings.TrimSpace(
+		utils.Input("PIN Baru       : "),
+	)
+
+	confirm := strings.TrimSpace(
+		utils.Input("Konfirmasi PIN : "),
+	)
+
+	if pin != confirm {
+		fmt.Println("\nKonfirmasi PIN tidak sama")
+		utils.PressEnter("Tekan Enter...")
+		return
+	}
+
+	if len(pin) != 6 {
+		fmt.Println("\nPIN harus 6 digit")
+		utils.PressEnter("Tekan Enter...")
+		return
+	}
+
+	err := h.authService.ForgotPin(
+		email,
+		hp,
+		pin,
+	)
+
+	if err != nil {
+
+		fmt.Println("\nGagal :", err)
+
+	} else {
+
+		fmt.Println("\nPIN berhasil diubah")
+
+	}
+
+	utils.PressEnter("Tekan Enter...")
 }
 
 func (h *HomeMenu) dashboard(user *models.LoginSession) {
