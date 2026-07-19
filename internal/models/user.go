@@ -121,6 +121,44 @@ func (r *UserRepository) FindByEmail(email string) (*User, error) {
 
 }
 
+func (r *UserRepository) FindByEmailAndPhone(email string, hp string) (*User, error) {
+
+	var user User
+
+	err := r.tx.QueryRow(
+		context.Background(),
+		`
+		SELECT
+			id,
+			email,
+			hp_number,
+			pin,
+			status_account,
+			created_at,
+			updated_at
+		FROM users
+		WHERE email=$1
+		AND hp_number=$2
+		`,
+		email,
+		hp,
+	).Scan(
+		&user.ID,
+		&user.Email,
+		&user.HPNumber,
+		&user.Pin,
+		&user.StatusAccount,
+		&user.CreatedAt,
+		&user.UpdatedAt,
+	)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &user, nil
+}
+
 func (r *UserRepository) FindByID(id int64) (*User, error) {
 	var user User
 
