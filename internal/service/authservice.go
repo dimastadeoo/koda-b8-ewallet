@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 	"errors"
+	// "time"
 
 	"github.com/dimastadeoo/koda-b8-ewallet/internal/models"
 	"github.com/jackc/pgx/v5"
@@ -173,4 +174,83 @@ func (s *AuthService) Login(
 		Profile: *profile,
 		Wallet:  *wallet,
 	}, nil
+}
+
+func (s *AuthService) ForgotPin(
+	email string,
+	hp string,
+	newPin string,
+	// dateBirth *time.Time,
+) error {
+
+	ctx := context.Background()
+
+	tx, err := s.conn.Begin(ctx)
+	if err != nil {
+		return err
+	}
+
+	defer tx.Rollback(ctx)
+
+	userRepo := models.NewUserRepository(tx)
+	sessionRepo := models.NewSessionRepository(tx)
+	userLogRepo := models.NewUserLogRepository(tx)
+	// profileRepo := models.NewProfileRepository(tx)
+
+	// Cari user
+	user, err := userRepo.FindByEmailAndPhone(
+		email,
+		hp,
+	)
+
+	
+	if err != nil {
+		return errors.New("email atau nomor HP tidak ditemukan")
+	}
+	
+	if user.StatusAccount != "active" {
+		return errors.New("akun tidak aktif")
+	}
+
+	// profile, err := profileRepo.FindByUserID(user.ID)
+
+	// Hash PIN baru
+	hashPin, err := bcrypt.GenerateFromPassword(
+		[]byte(newPin),
+		bcrypt.DefaultCost,
+	)
+
+	if err != nil {
+		return err
+	}
+
+	// Update PIN
+	err = userRepo.UpdatePin(
+		user.ID,
+		string(hashPin),
+	)
+
+	if err != nil {
+		return err
+	}
+
+	// Session
+	session, err := sessionRepo.Create("forgot-pin")
+	if err != nil {
+		return err
+	}
+
+	// User Log
+	err = userLogRepo.Create(
+		user.ID,
+		session.ID,
+		"Reset PIN",
+		"127.0.0.1",
+	)
+
+	if err != nil {
+		return err
+	}
+
+	return tx.Commit(ctx)
 }
